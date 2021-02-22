@@ -38,18 +38,21 @@ df['14DayPer100K'] = df['14DayPer100K'].round(0).astype(pd.Int64Dtype())
 
 # Filter data for table
 df = df.tail(days)
-table = df[["Date", "ConfirmedCovidCases", "7DayAverage", "14DayAverage", "7DayPer100K", "14DayPer100K"]]
+table = df[["Date", "ConfirmedCovidCases", "7DayAverage","14DayAverage", "7DayPer100K", "14DayPer100K"]]
 
 # Make column names friendly
-table.rename(columns={"ConfirmedCovidCases": "Cases",
-                      "7DayAverage": "7 Day Average",
-                      "14DayAverage": "14 Day Average",
-                      "7DayPer100K": "7-day case notifications per 100K",
-                      "14DayPer100K": "14-day case notifications per 100K"}, inplace=True)
+#table.rename(columns={"ConfirmedCovidCases": "Cases",
+#                      "7DayAverage": "7 Day Average",
+#                      "14DayAverage": "14 Day Average",
+#                      "7DayPer100K": "7-day case notifications per 100K",
+#                      "14DayPer100K": "14-day case notifications per 100K"}, inplace=True)
 
 # Format HTML table
-styler = table.style
-table_html = styler.hide_index().render()
+def color_rising(s):
+    is_rising = s.pct_change() > 0
+    return ['background-color: red' if v else '' for v in is_rising]
+
+table_html = table.style.apply(color_rising, subset=['7DayAverage','14DayAverage','7DayPer100K','14DayPer100K']).hide_index().render()
 
 # Render template
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
