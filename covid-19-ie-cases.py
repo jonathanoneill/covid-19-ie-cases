@@ -6,9 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import jinja2
 
-# Variables
-population = 4937786
-days = 7
+# Constants
+population = 4757976 #2016 Census
+days = 14
 output_file = "covid-19-ie-cases.html"
 
 # Get latest data in csv format
@@ -36,23 +36,23 @@ df['14DayAverage'] = df['14DayAverage'].round(0).astype(pd.Int64Dtype())
 df['7DayPer100K'] = df['7DayPer100K'].round(0).astype(pd.Int64Dtype())
 df['14DayPer100K'] = df['14DayPer100K'].round(0).astype(pd.Int64Dtype())
 
+# Make column names friendly
+df.rename(columns={ "ConfirmedCovidCases": "Cases",
+                    "7DayAverage": "7 Day Average",
+                    "14DayAverage": "14 Day Average",
+                    "7DayPer100K": "7 Day Per 100K",
+                    "14DayPer100K": "14 Day Per 100K"}, inplace=True)
+
 # Filter data for table
 df = df.tail(days)
-table = df[["Date", "ConfirmedCovidCases", "7DayAverage","14DayAverage", "7DayPer100K", "14DayPer100K"]]
-
-# Make column names friendly
-#table.rename(columns={"ConfirmedCovidCases": "Cases",
-#                      "7DayAverage": "7 Day Average",
-#                      "14DayAverage": "14 Day Average",
-#                      "7DayPer100K": "7-day case notifications per 100K",
-#                      "14DayPer100K": "14-day case notifications per 100K"}, inplace=True)
+table = df[["Date", "Cases", "7 Day Average","14 Day Average", "7 Day Per 100K", "14 Day Per 100K"]]
 
 # Format HTML table
 def color_rising(s):
     is_rising = s.pct_change() > 0
     return ['background-color: red' if v else '' for v in is_rising]
 
-table_html = table.style.apply(color_rising, subset=['7DayAverage','14DayAverage','7DayPer100K','14DayPer100K']).hide_index().render()
+table_html = table.style.apply(color_rising, subset=['7 Day Average','14 Day Average','7 Day Per 100K','14 Day Per 100K']).hide_index().render()
 
 # Render template
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
@@ -62,5 +62,5 @@ template = templateEnv.get_template(TEMPLATE_FILE)
 
 # Write HTML file
 file = open(output_file, "w")
-file.write (template.render(table=table_html))
+file.write (template.render(table=table_html, days=days))
 file.close()

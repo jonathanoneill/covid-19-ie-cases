@@ -3,6 +3,9 @@
         h2 {
           font-family: arial, sans-serif;
         }
+        p {
+          font-family: arial, sans-serif;
+        }
         table {
           font-family: arial, sans-serif;
           border-collapse: collapse;
@@ -18,7 +21,8 @@
         </style>
     <head></head>
     <body>
-        <h2>COVID-19 - Ireland Case Data</h2>
+        <h2>COVID-19 - Ireland Case Data - Last {{days}} Days</h2>
         {{ table }}
+        <p>Note: Rising values are highlighted in red</p>
     </body>
 </html>
