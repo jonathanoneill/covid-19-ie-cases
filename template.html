@@ -45,6 +45,10 @@
   .styled-table tbody tr:last-of-type {
     border-bottom: 2px solid #ffee00;
   }
+
+  .value-rising {
+    background-color: #ff0010;
+  }
 </style>
 
 <head></head>
@@ -56,21 +60,44 @@
     <table class="styled-table">
       <thead>
         <tr>
-          {% for c in cols %}
-          <th>
-            {{c}}
+          <th>Date</th>
+          <th>Cases</th>
+          <th>7 Day Average</th>
+          <th>14 Day Average</th>
+          <th>7 Day Per 100K</th>
+          <th>14 Day Per 100K</th>
           </th>
-          {% endfor %}
       </thead>
       <tbody>
         {% for row in rows %}
         <tr>
           <td>{{row.Date}}</td>
           <td>{{row.Cases}}</td>
-          <td>{{row.Num7DayAverage}}</td>
-          <td>{{row.Num14DayAverage}}</td>
-          <td>{{row.Num7DayPer100K}}</td>
-          <td>{{row.Num14DayPer100K}}</td>
+
+          {% if row.Is7DayAverageRising %}
+            <td class="value-rising">{{row.Num7DayAverage}}</td>
+          {% else %}
+            <td>{{row.Num7DayAverage}}</td>
+          {% endif %}
+
+          {% if row.Is14DayAverageRising %}
+            <td class="value-rising">{{row.Num14DayAverage}}</td>
+          {% else %}
+            <td>{{row.Num14DayAverage}}</td>
+          {% endif %}
+
+          {% if row.Is7DayPer100KRising %}
+            <td class="value-rising">{{row.Num7DayPer100K}}</td>
+          {% else %}
+            <td>{{row.Num7DayPer100K}}</td>
+          {% endif %}
+
+          {% if row.Is14DayAverageRising %}
+            <td class="value-rising">{{row.Num14DayPer100K}}</td>
+          {% else %}
+            <td>{{row.Num14DayPer100K}}</td>
+          {% endif %}
+
         </tr>
         {% endfor %}
       </tbody>

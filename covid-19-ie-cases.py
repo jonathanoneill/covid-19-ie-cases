@@ -29,6 +29,11 @@ df['14DayAverage'] = df['ConfirmedCovidCases'].rolling(14).mean()
 df['7DayPer100K'] = df['ConfirmedCovidCases'].rolling(7).sum() / population * 100000
 df['14DayPer100K'] = df['ConfirmedCovidCases'].rolling(14).sum() / population * 100000
 
+df['Is7DayAverageRising'] = df['7DayAverage'].pct_change() > 0
+df['Is14DayAverageRising'] = df['14DayAverage'].pct_change() > 0
+df['Is7DayPer100KRising'] = df['7DayPer100K'].pct_change() > 0
+df['Is14DayPer100KRising'] = df['14DayPer100K'].pct_change() > 0
+
 # Format columns
 df['Date'] = pd.to_datetime(df['Date']).dt.date
 df['7DayAverage'] = df['7DayAverage'].round(0).astype(pd.Int64Dtype())
@@ -45,25 +50,14 @@ df.rename(columns={ "ConfirmedCovidCases": "Cases",
 
 # Filter data for table
 df = df.tail(days)
-# table = df[["Date", "Cases", "7 Day Average","14 Day Average", "7 Day Per 100K", "14 Day Per 100K"]]
 
-# Format HTML table
-# def color_rising(s):
-#     is_rising = s.pct_change() > 0
-#     return ['background-color: red' if v else '' for v in is_rising]
-
-# table_html = table.style.apply(color_rising, subset=['7 Day Average','14 Day Average','7 Day Per 100K','14 Day Per 100K']).hide_index().render()
-
-# Render template
+# Load template
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
 templateEnv = jinja2.Environment(loader=templateLoader)
 TEMPLATE_FILE = "template.html"
 template = templateEnv.get_template(TEMPLATE_FILE)
 
-# Extra
-
-cols = ['Date', 'Cases', '7 Day Average', '14 Day Average', '7 Day Per 100K', '14 Day Per 100K']    
-
+# Convert DataFrame to dictionary
 rows = (
     df
     .to_dict(orient='records')
@@ -71,6 +65,5 @@ rows = (
 
 # Write HTML file
 file = open(output_file, "w")
-# file.write (template.render(table=table_html, days=days, rows=rows, cols=cols))
-file.write (template.render(days=days, rows=rows, cols=cols))
+file.write (template.render(days=days, rows=rows))
 file.close()
