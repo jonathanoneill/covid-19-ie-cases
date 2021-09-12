@@ -38,21 +38,21 @@ df['14DayPer100K'] = df['14DayPer100K'].round(0).astype(pd.Int64Dtype())
 
 # Make column names friendly
 df.rename(columns={ "ConfirmedCovidCases": "Cases",
-                    "7DayAverage": "7 Day Average",
-                    "14DayAverage": "14 Day Average",
-                    "7DayPer100K": "7 Day Per 100K",
-                    "14DayPer100K": "14 Day Per 100K"}, inplace=True)
+                    "7DayAverage": "Num7DayAverage",
+                    "14DayAverage": "Num14DayAverage",
+                    "7DayPer100K": "Num7DayPer100K",
+                    "14DayPer100K": "Num14DayPer100K"}, inplace=True)
 
 # Filter data for table
 df = df.tail(days)
-table = df[["Date", "Cases", "7 Day Average","14 Day Average", "7 Day Per 100K", "14 Day Per 100K"]]
+# table = df[["Date", "Cases", "7 Day Average","14 Day Average", "7 Day Per 100K", "14 Day Per 100K"]]
 
 # Format HTML table
-def color_rising(s):
-    is_rising = s.pct_change() > 0
-    return ['background-color: red' if v else '' for v in is_rising]
+# def color_rising(s):
+#     is_rising = s.pct_change() > 0
+#     return ['background-color: red' if v else '' for v in is_rising]
 
-table_html = table.style.apply(color_rising, subset=['7 Day Average','14 Day Average','7 Day Per 100K','14 Day Per 100K']).hide_index().render()
+# table_html = table.style.apply(color_rising, subset=['7 Day Average','14 Day Average','7 Day Per 100K','14 Day Per 100K']).hide_index().render()
 
 # Render template
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
@@ -60,7 +60,17 @@ templateEnv = jinja2.Environment(loader=templateLoader)
 TEMPLATE_FILE = "template.html"
 template = templateEnv.get_template(TEMPLATE_FILE)
 
+# Extra
+
+cols = ['Date', 'Cases', '7 Day Average', '14 Day Average', '7 Day Per 100K', '14 Day Per 100K']    
+
+rows = (
+    df
+    .to_dict(orient='records')
+)[:days]
+
 # Write HTML file
 file = open(output_file, "w")
-file.write (template.render(table=table_html, days=days))
+# file.write (template.render(table=table_html, days=days, rows=rows, cols=cols))
+file.write (template.render(days=days, rows=rows, cols=cols))
 file.close()

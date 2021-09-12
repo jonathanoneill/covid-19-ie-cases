@@ -1,28 +1,83 @@
 <html>
-    <style>
-        h2 {
-          font-family: arial, sans-serif;
-        }
-        p {
-          font-family: arial, sans-serif;
-        }
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-        }
-        td, th {
-          border: 1px solid #dddddd;
-          text-align: left;
-          padding: 8px;
-        }
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-        </style>
-    <head></head>
-    <body>
-        <h2>COVID-19 - Ireland Case Data - Last {{days}} Days</h2>
-        {{ table }}
-        <p>Note: Rising values are highlighted in red</p>
-    </body>
+<style>
+  body {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  h2 {
+    font-family: arial, sans-serif;
+  }
+
+  p {
+    font-family: arial, sans-serif;
+  }
+
+  .styled-table {
+    border-collapse: collapse;
+    color: #000000;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .styled-table thead tr {
+    background-color: #ffee00;
+    color: #000000;
+    text-align: left;
+  }
+
+  .styled-table th,
+  .styled-table td {
+    padding: 12px 15px;
+  }
+
+  .styled-table tbody tr {
+    background-color: #f3f3f3;
+    border-bottom: 1px solid #dddddd;
+  }
+
+  .styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+  }
+
+  .styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #ffee00;
+  }
+</style>
+
+<head></head>
+
+<body>
+  <h2>COVID-19 - Ireland Case Data - Last {{days}} Days</h2>
+
+  <div>
+    <table class="styled-table">
+      <thead>
+        <tr>
+          {% for c in cols %}
+          <th>
+            {{c}}
+          </th>
+          {% endfor %}
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr>
+          <td>{{row.Date}}</td>
+          <td>{{row.Cases}}</td>
+          <td>{{row.Num7DayAverage}}</td>
+          <td>{{row.Num14DayAverage}}</td>
+          <td>{{row.Num7DayPer100K}}</td>
+          <td>{{row.Num14DayPer100K}}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+  </div>
+
+  <p>Note: Rising values are highlighted in red</p>
+
+</body>
+
 </html>
