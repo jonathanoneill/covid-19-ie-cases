@@ -1,110 +1,70 @@
-<html>
-<style>
-  body {
-    background-color: #000000;
-    color: #ffffff;
-  }
-  h2 {
-    font-family: arial, sans-serif;
-  }
+<!doctype html>
+<html lang="en">
 
-  p {
-    font-family: arial, sans-serif;
-  }
-
-  .styled-table {
-    border-collapse: collapse;
-    color: #000000;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  }
-
-  .styled-table thead tr {
-    background-color: #ffee00;
-    color: #000000;
-    text-align: left;
-  }
-
-  .styled-table th,
-  .styled-table td {
-    padding: 12px 15px;
-  }
-
-  .styled-table tbody tr {
-    background-color: #f3f3f3;
-    border-bottom: 1px solid #dddddd;
-  }
-
-  .styled-table tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
-  }
-
-  .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #ffee00;
-  }
-
-  .value-rising {
-    background-color: #ff0010;
-  }
-</style>
-
-<head></head>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <title>COVID-19 - Ireland Case Data - Last {{days}} Days</title>
+</head>
 
 <body>
-  <h2>COVID-19 - Ireland Case Data - Last {{days}} Days</h2>
-
-  <div>
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Cases</th>
-          <th>7 Day Average</th>
-          <th>14 Day Average</th>
-          <th>7 Day Per 100K</th>
-          <th>14 Day Per 100K</th>
-          </th>
-      </thead>
-      <tbody>
-        {% for row in rows %}
-        <tr>
-          <td>{{row.Date}}</td>
-          <td>{{row.Cases}}</td>
-
-          {% if row.Is7DayAverageRising %}
-            <td class="value-rising">{{row.Num7DayAverage}}</td>
-          {% else %}
-            <td>{{row.Num7DayAverage}}</td>
-          {% endif %}
-
-          {% if row.Is14DayAverageRising %}
-            <td class="value-rising">{{row.Num14DayAverage}}</td>
-          {% else %}
-            <td>{{row.Num14DayAverage}}</td>
-          {% endif %}
-
-          {% if row.Is7DayPer100KRising %}
-            <td class="value-rising">{{row.Num7DayPer100K}}</td>
-          {% else %}
-            <td>{{row.Num7DayPer100K}}</td>
-          {% endif %}
-
-          {% if row.Is14DayAverageRising %}
-            <td class="value-rising">{{row.Num14DayPer100K}}</td>
-          {% else %}
-            <td>{{row.Num14DayPer100K}}</td>
-          {% endif %}
-
-        </tr>
-        {% endfor %}
-      </tbody>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <h1 class="display-6 text-center mb-4 mt-4">COVID-19 - Ireland Case Data - Last {{days}} Days</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <table class="table">
+          <thead class="table-dark">
+            <tr>
+              <th>Date</th>
+              <th class="text-end">Cases</th>
+              <th class="text-end">7 Day Average</th>
+              <th class="text-end">14 Day Average</th>
+              <th class="text-end">7 Day Per 100K</th>
+              <th class="text-end">14 Day Per 100K</th>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{row.Date}}</td>
+              <td class="text-end">{{row.Cases}}</td>
+              {% if row.Is7DayAverageRising %}
+              <td class="bg-danger text-end">{{row.Num7DayAverage}}</td>
+              {% else %}
+              <td class="text-end">{{row.Num7DayAverage}}</td>
+              {% endif %}
+              {% if row.Is14DayAverageRising %}
+              <td class="bg-danger text-end">{{row.Num14DayAverage}}</td>
+              {% else %}
+              <td class="text-end">{{row.Num14DayAverage}}</td>
+              {% endif %}
+              {% if row.Is7DayPer100KRising %}
+              <td class="bg-danger text-end">{{row.Num7DayPer100K}}</td>
+              {% else %}
+              <td class="text-end">{{row.Num7DayPer100K}}</td>
+              {% endif %}
+              {% if row.Is14DayAverageRising %}
+              <td class="bg-danger text-end">{{row.Num14DayPer100K}}</td>
+              {% else %}
+              <td class="text-end">{{row.Num14DayPer100K}}</td>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-8 offset-md-2">
+        <p><small>Rising values are highlighted in red</small></p>
+      </div>
+    </div>
   </div>
-
-  <p>Note: Rising values are highlighted in red</p>
-
 </body>
 
 </html>
