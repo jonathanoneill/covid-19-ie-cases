@@ -3,6 +3,7 @@ import numpy as np
 import requests
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 import numpy as np
 import jinja2
 
@@ -67,3 +68,12 @@ rows = (
 file = open(output_file, "w")
 file.write (template.render(days=days, rows=rows))
 file.close()
+
+# Plot Moving Averages
+ax = plt.gca()
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%d-%b'))
+plt.ylabel('Cases/100K')
+df.plot(kind='line',x='Date',y='Num7DayPer100K',ax=ax)
+df.plot(kind='line',x='Date',y='Num14DayPer100K', ax=ax)
+ax.legend(["7 Day Moving Average", "14 Day Moving Average"])
+plt.savefig('covid-19-ie-cases.png')
