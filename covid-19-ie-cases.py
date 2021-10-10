@@ -13,6 +13,7 @@ DAYS = 14
 DATA_URL = 'https://opendata.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0.csv'
 DATA_FILE = 'covid-19-ie-cases.csv'
 HTML_FILE = "covid-19-ie-cases.html"
+PNG_FILE = 'covid-19-ie-cases.png'
 TEMPLATE_FILE = 'template.html'
 
 # Get latest data in csv format
@@ -66,4 +67,4 @@ plt.ylabel('Cases/100K')
 df.plot(kind='line',x='Date',y='Num7DayPer100K',ax=ax)
 df.plot(kind='line',x='Date',y='Num14DayPer100K', ax=ax)
 ax.legend(["7 Day Moving Average", "14 Day Moving Average"])
-plt.savefig('covid-19-ie-cases.png')
+plt.savefig(PNG_FILE)
