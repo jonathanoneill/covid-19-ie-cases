@@ -8,27 +8,25 @@ import numpy as np
 import jinja2
 
 # Constants
-population = 4757976 #2016 Census
-days = 14
-output_file = "covid-19-ie-cases.html"
+POPULATION = 4757976 #2016 Census
+DAYS = 14
+DATA_URL = 'https://opendata.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0.csv'
+DATA_FILE = 'covid-19-ie-cases.csv'
+HTML_FILE = "covid-19-ie-cases.html"
+TEMPLATE_FILE = 'template.html'
 
 # Get latest data in csv format
-filename = 'covid-19-ie-cases.csv'
-
-data_url = 'https://opendata.arcgis.com/datasets/d8eb52d56273413b84b0187a4e9117be_0.csv'
-
-data_content = requests.get(data_url).content
-csv_file = open(filename, 'wb')
+data_content = requests.get(DATA_URL).content
+csv_file = open(DATA_FILE, 'wb')
 csv_file.write(data_content)
 csv_file.close()
-
-df = pd.read_csv(filename)
+df = pd.read_csv(DATA_FILE)
 
 # Calculations
 df['7DayAverage'] = df['ConfirmedCovidCases'].rolling(7).mean()
 df['14DayAverage'] = df['ConfirmedCovidCases'].rolling(14).mean()
-df['7DayPer100K'] = df['ConfirmedCovidCases'].rolling(7).sum() / population * 100000
-df['14DayPer100K'] = df['ConfirmedCovidCases'].rolling(14).sum() / population * 100000
+df['7DayPer100K'] = df['ConfirmedCovidCases'].rolling(7).sum() / POPULATION * 100000
+df['14DayPer100K'] = df['ConfirmedCovidCases'].rolling(14).sum() / POPULATION * 100000
 
 df['Is7DayAverageRising'] = df['7DayAverage'].pct_change() > 0
 df['Is14DayAverageRising'] = df['14DayAverage'].pct_change() > 0
@@ -50,23 +48,22 @@ df.rename(columns={ "ConfirmedCovidCases": "Cases",
                     "14DayPer100K": "Num14DayPer100K"}, inplace=True)
 
 # Filter data for table
-df = df.tail(days)
+df = df.tail(DAYS)
 
 # Load template
 templateLoader = jinja2.FileSystemLoader(searchpath="./")
 templateEnv = jinja2.Environment(loader=templateLoader)
-TEMPLATE_FILE = "template.html"
 template = templateEnv.get_template(TEMPLATE_FILE)
 
 # Convert DataFrame to dictionary
 rows = (
     df
     .to_dict(orient='records')
-)[:days]
+)[:DAYS]
 
 # Write HTML file
-file = open(output_file, "w")
-file.write (template.render(days=days, rows=rows))
+file = open(HTML_FILE, "w")
+file.write (template.render(days=DAYS, rows=rows))
 file.close()
 
 # Plot Moving Averages
