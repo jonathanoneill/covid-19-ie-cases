@@ -23,29 +23,22 @@ csv_file.close()
 df = pd.read_csv(DATA_FILE)
 
 # Calculations
-df['7DayAverage'] = df['ConfirmedCovidCases'].rolling(7).mean()
-df['14DayAverage'] = df['ConfirmedCovidCases'].rolling(14).mean()
-df['7DayPer100K'] = df['ConfirmedCovidCases'].rolling(7).sum() / POPULATION * 100000
-df['14DayPer100K'] = df['ConfirmedCovidCases'].rolling(14).sum() / POPULATION * 100000
+df['Num7DayAverage'] = df['ConfirmedCovidCases'].rolling(7).mean()
+df['Num14DayAverage'] = df['ConfirmedCovidCases'].rolling(14).mean()
+df['Num7DayPer100K'] = df['ConfirmedCovidCases'].rolling(7).sum() / POPULATION * 100000
+df['Num14DayPer100K'] = df['ConfirmedCovidCases'].rolling(14).sum() / POPULATION * 100000
 
-df['Is7DayAverageRising'] = df['7DayAverage'].pct_change() > 0
-df['Is14DayAverageRising'] = df['14DayAverage'].pct_change() > 0
-df['Is7DayPer100KRising'] = df['7DayPer100K'].pct_change() > 0
-df['Is14DayPer100KRising'] = df['14DayPer100K'].pct_change() > 0
+df['Is7DayAverageRising'] = df['Num7DayAverage'].pct_change() > 0
+df['Is14DayAverageRising'] = df['Num14DayAverage'].pct_change() > 0
+df['Is7DayPer100KRising'] = df['Num7DayPer100K'].pct_change() > 0
+df['Is14DayPer100KRising'] = df['Num14DayPer100K'].pct_change() > 0
 
 # Format columns
 df['Date'] = pd.to_datetime(df['Date']).dt.date
-df['7DayAverage'] = df['7DayAverage'].round(0).astype(pd.Int64Dtype())
-df['14DayAverage'] = df['14DayAverage'].round(0).astype(pd.Int64Dtype())
-df['7DayPer100K'] = df['7DayPer100K'].round(0).astype(pd.Int64Dtype())
-df['14DayPer100K'] = df['14DayPer100K'].round(0).astype(pd.Int64Dtype())
-
-# Make column names friendly
-df.rename(columns={ "ConfirmedCovidCases": "Cases",
-                    "7DayAverage": "Num7DayAverage",
-                    "14DayAverage": "Num14DayAverage",
-                    "7DayPer100K": "Num7DayPer100K",
-                    "14DayPer100K": "Num14DayPer100K"}, inplace=True)
+df['Num7DayAverage'] = df['Num7DayAverage'].round(0).astype(pd.Int64Dtype())
+df['Num14DayAverage'] = df['Num14DayAverage'].round(0).astype(pd.Int64Dtype())
+df['Num7DayPer100K'] = df['Num7DayPer100K'].round(0).astype(pd.Int64Dtype())
+df['Num14DayPer100K'] = df['Num14DayPer100K'].round(0).astype(pd.Int64Dtype())
 
 # Filter data for table
 df = df.tail(DAYS)

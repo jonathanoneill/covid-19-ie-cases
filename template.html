@@ -32,7 +32,7 @@
             {% for row in rows %}
             <tr>
               <td>{{row.Date}}</td>
-              <td class="text-end">{{row.Cases}}</td>
+              <td class="text-end">{{row.ConfirmedCovidCases}}</td>
               {% if row.Is7DayAverageRising %}
               <td class="bg-danger text-end">{{row.Num7DayAverage}}</td>
               {% else %}
